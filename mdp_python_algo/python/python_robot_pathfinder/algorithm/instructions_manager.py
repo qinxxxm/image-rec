@@ -1,12 +1,12 @@
 from config.constants import Moves
 
 """
-LEFT_FORWARD = 0
-FORWARD_FORWARD = 1
-RIGHT_FORWARD = 2
-LEFT_BACKWARD = 3
-BACKWARD_BACKWARD = 4
-RIGHT_BACKWARD = 5
+l = 0
+f = 1
+r = 2
+m = 3
+b = 4
+o = 5
 """
 # Take picture symbol
 TAKE_PICTURE = 'take picture'
@@ -33,7 +33,7 @@ def compress_instructions(instruction_list: list):
 
 def find_object_face():
     # Scan, Move back 3x, Turn right, Forward, TL * 2
-    iList = ["take picture"] + [Moves.BACKWARD_BACKWARD] * 3 + [Moves.RIGHT_FORWARD] + [Moves.FORWARD_FORWARD] + [Moves.LEFT_FORWARD] * 2
+    iList = ["take picture"] + [Moves.b] * 3 + [Moves.r] + [Moves.f] + [Moves.l] * 2
     return compress_instructions(iList * 4)
 
 def commands_to_message(commands: list):
@@ -50,7 +50,7 @@ def commands_to_message(commands: list):
     return str
 
 if __name__ == "__main__":
-    iList = [Moves.BACKWARD_BACKWARD] * 15 + ["take picture", Moves.FORWARD_FORWARD, Moves.LEFT_FORWARD, Moves.LEFT_FORWARD, Moves.LEFT_FORWARD, Moves.RIGHT_BACKWARD, Moves.RIGHT_FORWARD]
+    iList = [Moves.b] * 15 + ["take picture", Moves.f, Moves.l, Moves.l, Moves.l, Moves.o, Moves.r]
     print(compress_instructions(iList))
     
     # print(find_object_face())

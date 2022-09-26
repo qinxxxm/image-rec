@@ -25,12 +25,12 @@ class Facing(IntEnum):
     DOWN = 3
 
 class Moves(IntEnum):
-    LEFT_FORWARD = 0
-    FORWARD_FORWARD = 1
-    RIGHT_FORWARD = 2
-    LEFT_BACKWARD = 3
-    BACKWARD_BACKWARD = 4
-    RIGHT_BACKWARD = 5
+    l = 0
+    f = 1
+    r = 2
+    m = 3
+    b = 4
+    o = 5
 
 class ArenaConst: #in cm
     ARENA_WIDTH = 200
@@ -83,12 +83,12 @@ class RobotConst:
     START_FACING = Facing.UP
     START_THETA = 90
     MOVES_PENALTY = [
-        3.5,  # LEFT_FORWARD
-        1.0,  # FORWARD_FORWARD
-        3.5,  # RIGHT_FORWARD
-        6.0,  # LEFT_BACKWARD
-        2.0,  # BACKWARD_BACKWARD
-        6.0,  # RIGHT_BACKWARD
+        3.5,  # l
+        1.0,  # f
+        3.5,  # r
+        6.0,  # m
+        2.0,  # b
+        6.0,  # o
     ]
     
     CHANGE_MOVES_PENALTY = 1.5

@@ -37,7 +37,7 @@ class RobotViewCommand:
         
         fdx, fdy = RobotConst.MOVES_FUNC_DXY[command.move][facing]
         bx, by, bt = robot_view.win_x, robot_view.win_y, robot_view.theta
-        if command.move in (Moves.FORWARD_FORWARD, Moves.BACKWARD_BACKWARD):
+        if command.move in (Moves.f, Moves.b):
             dist = SimulatorConst.WINDOW_CELL_WIDTH * command.repeat
             self.ticks = int((SimulatorConst.FRAMES_PER_SECOND * dist) // SimulatorConst.ROBOT_SPEED)
             radius = 0
