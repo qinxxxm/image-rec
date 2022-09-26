@@ -67,6 +67,6 @@ def get_path(board):
     
     # Add take pic char
     commands.reverse()
-    #commands.append('take picture')
+    commands.append('take picture')
     # print(commands)
     return commands
