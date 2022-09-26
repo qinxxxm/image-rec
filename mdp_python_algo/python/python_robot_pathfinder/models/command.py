@@ -15,6 +15,8 @@ class Command:
         if self.repeat>10:
             return f'{self.move.name}{self.repeat*10}'
         else:
+            if self.move.name == "l" or self.move.name == "r" or self.move.name == "m" or self.move.name == "o":
+                return f'{self.move.name}{self.zero}{90}'
             return f'{self.move.name}{self.zero}{self.repeat*10}'
     def inc_repeat(self):
         self.repeat += 1
