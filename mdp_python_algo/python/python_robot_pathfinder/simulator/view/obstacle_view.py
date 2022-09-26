@@ -10,7 +10,7 @@ def draw_obstacle(simulator, obstacle: Obstacle):
     win_x, win_y = obstacle.cell_pos.win_pos()
 
     # draw the image
-    image = pygame.image.load(os.path.join('assets', f'{obstacle.image.name}.png'))
+    image = pygame.image.load(os.path.join('mdp_python_algo','assets', f'{obstacle.image.name}.png'))
     image = pygame.transform.scale(image, (SimulatorConst.WINDOW_CELL_WIDTH, SimulatorConst.WINDOW_CELL_HEIGHT))
     image_rect = image.get_rect()
     image_rect.center = win_x, win_y
