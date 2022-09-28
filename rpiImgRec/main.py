@@ -11,13 +11,11 @@ def predictImage(image):
     # camera.capture("picameraImages/img.jpg")
     # print("Done.")
     # image='picameraImages/img.png'
-    response = requests.post('http://192.168.50.246:5000/predictImage',
+    response = requests.post('http://192.168.1.16:5000/predictImage',
                              files={'file': open(image, 'rb')})
 
     if (response.status_code == 200):
-        save_file = open("./predicted-img/predictedImage.jpg", "wb")
-        save_file.write(response.content)
-        save_file.close()
+        print(response.content)
         # stitchImage()
         # json = response.json()
         # we can get the 'class' from here, and with that info know what to do
@@ -46,4 +44,4 @@ def stitchImage():
 
 predictImage('test-img/IMG_1100.jpg')  # for getting back predicted image file
 
-predictJSON('test-img/IMG_2203.jpg')  # for getting back predicted image class
+# predictJSON('test-img/IMG_2203.jpg')  # for getting back predicted image class
