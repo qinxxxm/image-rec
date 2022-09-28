@@ -11,10 +11,25 @@ def parse_args():
     )
     return parser.parse_args()
 
-def run_simulator(args):
+# def run_simulator(args):
+#     simulator = Simulator()
+#     simulator.init_display()
+#     simulator.init_map(args.map)
+    
+#     while True:
+#         simulator.handle_events()
+#         if not simulator.running:
+#             print('Exiting simulator')
+#             break
+#         simulator.draw()
+#         simulator.tick()
+
+    # return simulator.handle_events()
+        
+def run_simulator_return_commands_dict(args,pos_dict_full):
     simulator = Simulator()
-    simulator.init_display()
-    simulator.init_map(args.map)
+    simulator.init_display(pos_dict_full)
+    simulator.init_map(args.map, pos_dict_full)
     
     # while True:
     #     simulator.handle_events()
@@ -25,8 +40,6 @@ def run_simulator(args):
     #     simulator.tick()
 
     return simulator.handle_events()
-        
-
 
 # if __name__ == '__main__':
 #     args = parse_args()

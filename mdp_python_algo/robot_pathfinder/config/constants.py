@@ -78,10 +78,12 @@ class ObstacleImage(Enum):
 class RobotConst:    
     WIDTH = 25
     HEIGHT = 20
-    START_X = 1
-    START_Y = 1
-    START_FACING = Facing.UP
-    START_THETA = 90
+# robot x, y ,facing, theta are obsolete. replaced by value in pos_dict_robot
+    # START_X = 1
+    # START_Y = 1
+    # START_FACING = Facing.UP
+    # START_THETA = 90
+
     MOVES_PENALTY = [
         3.5,  # l
         1.0,  # f

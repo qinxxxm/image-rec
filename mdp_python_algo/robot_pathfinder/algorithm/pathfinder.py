@@ -38,7 +38,7 @@ def plan_paths(arena: Arena, robot: Robot):
     commands = list()
     # commands_dict returns a dictionary of movements
     commands_dict = {}
-    commands_index = 0
+    commands_index = 1
 
     for obstacle in simple_hamiltonian_path:
         board = Board.from_arena(arena)

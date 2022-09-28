@@ -3,7 +3,9 @@ import pygame
 import sys
 from mdp_python_algo.robot_pathfinder.utils.log_utils import print_warning, print_error
 from mdp_python_algo.robot_pathfinder.utils.position_utils import cellx_winx, celly_winy
-from mdp_python_algo.robot_pathfinder.config.default_arena import ARENAS
+from mdp_python_algo.robot_pathfinder.config.set_arena import set_arena
+from mdp_python_algo.robot_pathfinder.config.set_robot import set_robot
+from mdp_python_algo.robot_pathfinder.config.constants import Facing
 from mdp_python_algo.robot_pathfinder.config.constants import Color, RobotConst
 from mdp_python_algo.robot_pathfinder.config.constants import SimulatorConst
 from mdp_python_algo.robot_pathfinder.simulator.manage.show_default_map import draw_display_default_map, handle_events_display_default_map
@@ -38,9 +40,11 @@ class Simulator:
         self.commands = None
         self.robot_view = None
         
-    def init_map(self, map_index):
+    def init_map(self, map_index, pos_dict_full):
         print('Loading map to pygame')
         print(f'User choice is {map_index}')
+        #here ger the arena value from pos_dict_full
+        ARENAS = set_arena(pos_dict_full)
         if map_index == -1:
             print('Default map is not loaded, waiting for user input')
             self.mode = SimulatorConst.MODE_CUSTOMIZE_MAP
@@ -77,7 +81,7 @@ class Simulator:
         draw_robot(self)
         
         pygame.display.flip()        
-    def init_display(self):
+    def init_display(self, pos_dict_full):
         print('Initializing pygame')
         
         # UI
@@ -88,11 +92,24 @@ class Simulator:
         
         # algorithm
         self.arena = Arena()
-        self.robot = Robot(CellPosition(RobotConst.START_X, RobotConst.START_Y, RobotConst.START_FACING))
+        # here get the robot pos from pos_dict_robot
+        pos_dict_robot = set_robot(pos_dict_full)
+        robot_start_x = pos_dict_robot[0][0]
+        robot_start_y = pos_dict_robot[0][1]
+        robot_start_facing = pos_dict_robot[0][2]
+        if robot_start_facing == Facing.UP:
+            robot_start_theta = 90
+        elif robot_start_facing == Facing.RIGHT:
+            robot_start_theta = 0
+        elif robot_start_facing == Facing.LEFT:
+            robot_start_theta = 180
+        elif robot_start_facing ==Facing.DOWN:
+            robot_start_theta = 270
+        self.robot = Robot(CellPosition(robot_start_x, robot_start_y, robot_start_facing))
         self.command = None
         self.commands = list()
         self.robot_view = \
-            RobotView(cellx_winx(RobotConst.START_X), celly_winy(RobotConst.START_Y), RobotConst.START_THETA)
+            RobotView(cellx_winx(robot_start_x), celly_winy(robot_start_y), robot_start_theta)
     def tick(self):
         if not self.running or self.mode == SimulatorConst.MODE_NULL or self.clock is None:
             # this line shouldn't be reached
