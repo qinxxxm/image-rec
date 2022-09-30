@@ -6,8 +6,10 @@ from mdp_python_algo.robot_pathfinder.models.obstacle import Obstacle
 
 
 def set_arena(pos_dict_full):
+    # pos_dict_full contains obstacle and robot pos
     pos_dict_obstacle = pos_dict_full
-    pos_dict_obstacle.popitem()
+    # remove the robot pos, hence only have obstacle pos
+    pos_dict_obstacle.pop('ROBOT',None)
     print('pos_dict_obstacle: ',pos_dict_obstacle)
 
     ARENAS = list()
@@ -15,10 +17,22 @@ def set_arena(pos_dict_full):
     arena0 = Arena()
     ARENAS.append(arena0)
 
-
+    # put obstacle pos into ARENAS
     for key in pos_dict_obstacle:
-        arena0.add_obstacle(Obstacle(CellPosition((pos_dict_obstacle[key][0]), pos_dict_obstacle[key][1], pos_dict_obstacle[key][2]), ObstacleImage.A))
+        # error handling for x, y value that falls on the boarder where car cannot aim at center of obstacle
+        # shift such obstacles 1 grid towards center of arena
+        if pos_dict_obstacle[key][0] == 0:
+            pos_dict_obstacle[key][0] = 1
+        elif pos_dict_obstacle[key][0] == 19:
+            pos_dict_obstacle[key][0] = 18
+        if pos_dict_obstacle[key][1] == 0:
+            pos_dict_obstacle[key][1] = 1
+        elif pos_dict_obstacle[key][1] == 19:
+            pos_dict_obstacle[key][1] = 18
+        print('adjusted pos_dict_obstacle', pos_dict_obstacle)
 
+        arena0.add_obstacle(Obstacle(CellPosition((pos_dict_obstacle[key][0]), pos_dict_obstacle[key][1], pos_dict_obstacle[key][2]), ObstacleImage.A))
+    # print(ARENAS)
     return ARENAS
 
 # # old arena obstacle values:
