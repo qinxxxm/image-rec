@@ -40,8 +40,7 @@ def commands_to_message(commands: list):
     index = 0
     str = ""
     while (index < len(commands)):
-        str = str + f"{commands[index].move},{commands[index].repeat}/" if commands[
-                                                                                           index] != TAKE_PICTURE else str + f"{TAKE_PICTURE}/"
+        str = str + f"{commands[index].move},{commands[index].repeat}/" if commands[index] != TAKE_PICTURE else str + f"{TAKE_PICTURE}/"
         index += 1
     
     str += '!'

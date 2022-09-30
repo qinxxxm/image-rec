@@ -21,18 +21,18 @@ def set_arena(pos_dict_full):
     for key in pos_dict_obstacle:
         # error handling for x, y value that falls on the boarder where car cannot aim at center of obstacle
         # shift such obstacles 1 grid towards center of arena
-        if pos_dict_obstacle[key][0] == 0:
+        if (pos_dict_obstacle[key][0] == 0 and (pos_dict_obstacle[key][2] == Facing.DOWN or pos_dict_obstacle[key][2] == Facing.UP)):
             pos_dict_obstacle[key][0] = 1
-        elif pos_dict_obstacle[key][0] == 19:
+        elif (pos_dict_obstacle[key][0] == 19 and (pos_dict_obstacle[key][2] == Facing.DOWN or pos_dict_obstacle[key][2] == Facing.UP)):
             pos_dict_obstacle[key][0] = 18
-        if pos_dict_obstacle[key][1] == 0:
+
+        if (pos_dict_obstacle[key][1] == 0 and (pos_dict_obstacle[key][2] == Facing.LEFT or pos_dict_obstacle[key][2] == Facing.RIGHT)):
             pos_dict_obstacle[key][1] = 1
-        elif pos_dict_obstacle[key][1] == 19:
+        elif (pos_dict_obstacle[key][1] == 19 and (pos_dict_obstacle[key][2] == Facing.LEFT or pos_dict_obstacle[key][2] == Facing.RIGHT)):
             pos_dict_obstacle[key][1] = 18
-        print('adjusted pos_dict_obstacle', pos_dict_obstacle)
 
         arena0.add_obstacle(Obstacle(CellPosition((pos_dict_obstacle[key][0]), pos_dict_obstacle[key][1], pos_dict_obstacle[key][2]), ObstacleImage.A))
-    # print(ARENAS)
+    print('adjusted pos_dict_obstacle', pos_dict_obstacle)
     return ARENAS
 
 # # old arena obstacle values:
