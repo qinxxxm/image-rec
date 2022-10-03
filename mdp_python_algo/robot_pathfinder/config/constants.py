@@ -205,7 +205,7 @@ class SimulatorConst:
     ROBOT_WIDTH = RobotConst.WIDTH * WINDOW_SCALE_X
     ROBOT_HEIGHT = RobotConst.HEIGHT * WINDOW_SCALE_Y
     
-    ROBOT_SPEED = WINDOW_CELL_WIDTH * 9  # pixels per second
+    ROBOT_SPEED = WINDOW_CELL_WIDTH * 5  # pixels per second
     ROBOT_TURN_RADIUS = 2 * WINDOW_CELL_WIDTH
     
     FRAMES_PER_SECOND = 10

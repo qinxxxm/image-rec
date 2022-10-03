@@ -46,7 +46,7 @@ def plan_paths(arena: Arena, robot: Robot):
         board.start = board.nodes[last_cell.cell_y][last_cell.cell_x][last_cell.facing]
         board.goal = board.nodes[next_cell.cell_y][next_cell.cell_x][next_cell.facing]
         run_simple_hybrid_astar(board)
-        _,commands_dict[commands_index] = get_path(board)
+        commands_dict[commands_index] = get_path(board)[:-1]
         commands_index += 1
         commands.extend(get_path(board))
         last_cell = next_cell
@@ -64,21 +64,16 @@ def get_path(board):
     node = board.goal
     commands = list()
     command = None
-    commands_str = list()
     while node.predecessor is not None:
         if command is None or command.move != node.move:
             command = Command(node.move)
             commands.append(command)
-            command_str = str(command)
-            commands_str.append(command_str)
         else:
             command.inc_repeat()
         node = node.predecessor
     
     # Add take pic char
     commands.reverse()
-    commands_str.reverse()
-    print(command_str)
     commands.append('snap')
-    print(commands)
-    return commands, commands_str
+    # print(commands)
+    return commands
