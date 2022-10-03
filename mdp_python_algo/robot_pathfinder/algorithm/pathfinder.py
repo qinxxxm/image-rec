@@ -46,8 +46,15 @@ def plan_paths(arena: Arena, robot: Robot):
         board.start = board.nodes[last_cell.cell_y][last_cell.cell_x][last_cell.facing]
         board.goal = board.nodes[next_cell.cell_y][next_cell.cell_x][next_cell.facing]
         run_simple_hybrid_astar(board)
-        commands_dict[commands_index] = get_path(board)[:-1]
+
+        # convert Command Object to string and put in commands_dict
+        commands_list = get_path(board)[:-1]
+        commands_list_str = list()
+        for i in commands_list:
+            commands_list_str.append(str(i))
+        commands_dict[commands_index] = commands_list_str
         commands_index += 1
+
         commands.extend(get_path(board))
         last_cell = next_cell
     
