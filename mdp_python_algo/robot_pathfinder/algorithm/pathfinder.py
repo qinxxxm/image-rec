@@ -66,7 +66,7 @@ def plan_paths(arena: Arena, robot: Robot):
         for i in commands_list:
             commands_list_str.append(str(i))
         commands_list_str
-        commands_dict[commands_index] = commands_list_str
+        commands_dict[order[commands_index-1]] = commands_list_str
         commands_index += 1
         commands.extend(get_path(board))
         last_cell = next_cell
@@ -75,12 +75,7 @@ def plan_paths(arena: Arena, robot: Robot):
     print('Done path planning')
     # print(f'Total time consumed: {(end - start):.2f} seconds')
     print(commands)
-    print(commands_dict)
-    for i in range(len(commands_dict)):
-        commands_dict[i+10]=commands_dict.pop(i+1)
-    for i in range(len(commands_dict)):
-        commands_dict[order[i]]=commands_dict.pop(i+10)
-    
+    # print(commands_dict)
     return commands, commands_dict
 
 def get_path(board):
