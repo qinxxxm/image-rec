@@ -2,6 +2,7 @@
 pathfinder should be isolated from simulator
 """
 from ctypes import sizeof
+from re import X
 from mdp_python_algo.robot_pathfinder.models.arena import Arena
 from mdp_python_algo.robot_pathfinder.models.board import Board
 from mdp_python_algo.robot_pathfinder.models.command import Command
@@ -63,7 +64,23 @@ def plan_paths(arena: Arena, robot: Robot):
         # convert Command Object to string and put in commands_dict
         commands_list = get_path(board)[:-1]
         commands_list_str = list()
+        x=0
         for i in commands_list:
+            # print(i)
+            # if str(i) =="l180":
+            #     commands_list_str.append("l090")
+            #     commands_list_str.append("l090")
+            # elif str(i) =="r180":
+            #     commands_list_str.append("r090")
+            #     commands_list_str.append("r090")
+            # elif str(i) =="m180":
+            #     commands_list_str.append("m090")
+            #     commands_list_str.append("m090")
+            # elif str(i) =="o180":
+            #     commands_list_str.append("o090")
+            #     commands_list_str.append("o090")
+            # else:
+            #     commands_list_str.append(str(i))
             commands_list_str.append(str(i))
         commands_list_str
         commands_dict[order[commands_index-1]] = commands_list_str
@@ -77,7 +94,6 @@ def plan_paths(arena: Arena, robot: Robot):
     print(commands)
     # print(commands_dict)
     return commands, commands_dict
-
 def get_path(board):
     if not board.goal.close:
         return
