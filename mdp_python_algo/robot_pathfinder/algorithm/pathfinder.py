@@ -1,6 +1,7 @@
 """
 pathfinder should be isolated from simulator
 """
+from ctypes import sizeof
 from mdp_python_algo.robot_pathfinder.models.arena import Arena
 from mdp_python_algo.robot_pathfinder.models.board import Board
 from mdp_python_algo.robot_pathfinder.models.command import Command
@@ -29,10 +30,22 @@ def compute_simple_hamiltonian_path(arena: Arena, robot: Robot):
 
 def plan_paths(arena: Arena, robot: Robot):
     # start = time.time()
+    print("raw obsticals\n", arena.obstacles)
     simple_hamiltonian_path = compute_simple_hamiltonian_path(arena, robot)
     print('Found hamiltonian path')
     print(simple_hamiltonian_path)
-    
+    order = list()
+    for i in arena.obstacles:
+        count = 1
+        for j in simple_hamiltonian_path:
+            if (i!=j):
+                count+=1
+            else:
+                order.append(count)
+            
+        
+    print("order=",order)
+
     last_cell = robot.cell_pos
     
     commands = list()
@@ -52,9 +65,9 @@ def plan_paths(arena: Arena, robot: Robot):
         commands_list_str = list()
         for i in commands_list:
             commands_list_str.append(str(i))
+        commands_list_str
         commands_dict[commands_index] = commands_list_str
         commands_index += 1
-
         commands.extend(get_path(board))
         last_cell = next_cell
     
@@ -63,6 +76,11 @@ def plan_paths(arena: Arena, robot: Robot):
     # print(f'Total time consumed: {(end - start):.2f} seconds')
     print(commands)
     print(commands_dict)
+    for i in range(len(commands_dict)):
+        commands_dict[i+10]=commands_dict.pop(i+1)
+    for i in range(len(commands_dict)):
+        commands_dict[order[i]]=commands_dict.pop(i+10)
+    
     return commands, commands_dict
 
 def get_path(board):

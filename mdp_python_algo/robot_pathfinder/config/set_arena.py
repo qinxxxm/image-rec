@@ -10,7 +10,7 @@ def set_arena(pos_dict_full):
     pos_dict_obstacle = pos_dict_full
     # remove the robot pos, hence only have obstacle pos
     pos_dict_obstacle.pop('ROBOT',None)
-    print('pos_dict_obstacle: ',pos_dict_obstacle)
+    #print('pos_dict_obstacle: ',pos_dict_obstacle)
 
     ARENAS = list()
 
@@ -32,7 +32,7 @@ def set_arena(pos_dict_full):
             pos_dict_obstacle[key][1] = 18
 
         arena0.add_obstacle(Obstacle(CellPosition((pos_dict_obstacle[key][0]), pos_dict_obstacle[key][1], pos_dict_obstacle[key][2]), ObstacleImage.A))
-    print('adjusted pos_dict_obstacle', pos_dict_obstacle)
+    #print('adjusted pos_dict_obstacle', pos_dict_obstacle)
     return ARENAS
 
 # # old arena obstacle values:
