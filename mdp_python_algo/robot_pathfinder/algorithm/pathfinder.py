@@ -33,12 +33,11 @@ def plan_paths(arena: Arena, robot: Robot):
     # start = time.time()
     print("raw obsticals\n", arena.obstacles)
     simple_hamiltonian_path = compute_simple_hamiltonian_path(arena, robot)
-    print('Found hamiltonian path')
-    print(simple_hamiltonian_path)
+    print('Found hamiltonian path',simple_hamiltonian_path)
     order = list()
-    for i in arena.obstacles:
+    for i in simple_hamiltonian_path:
         count = 1
-        for j in simple_hamiltonian_path:
+        for j in arena.obstacles:
             if (i!=j):
                 count+=1
             else:
