@@ -1,0 +1,133 @@
+from glob import glob
+from flask import Flask, request
+import torch
+from PIL import Image
+from imutils import paths
+from flask import send_file, jsonify
+from flask_api import status
+# for getting latest exp folder
+from pathlib import Path
+import os
+import glob
+from path_getter import returnPath
+from mdp_python_algo.robot_pathfinder.config.constants import Facing
+import json
+
+app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
+
+# load img-rec model
+model = torch.hub.load('./', 'custom', path='best.pt', source='local')
+
+print("model loaded")
+
+
+@app.route('/')
+def index():
+    return "Hello World"
+
+
+
+#takes in image captured by the pi camera, and saves it in runs/detect/exp
+# returns a json containing details of the image detected
+@app.route('/predictImage', methods=['POST'])
+def predictImage():
+
+    file = request.files['file']
+    img = Image.open(file.stream)
+    results = model(img)
+    results.save('runs')
+    print(results)
+    if (results):
+        return results.pandas().xyxy[0].to_json(orient="records"), status.HTTP_200_OK
+    else:
+        return "no predicted image generated, please try again", status.HTTP_404_NOT_FOUND
+
+
+@app.route('/stitchImage', methods=['GET'])
+def stitchImage():
+    imageFolder = 'runs'
+    newPath = 'runs/stitched.jpg'
+    imagePath = list(paths.list_images(imageFolder))
+    images = [Image.open(x) for x in imagePath]
+    width, height = zip(*(i.size for i in images))
+    maxHeight = max(height)
+    totalWidth = sum(width)
+    stitchedImg = Image.new('RGB', (totalWidth, maxHeight))
+    x_offset = 0
+    for im in images:
+        stitchedImg.paste(im, (x_offset, 0))
+        x_offset += im.size[0]
+    stitchedImg.save(newPath)
+    return 'images stitched', status.HTTP_200_OK
+
+
+@app.route('/findPath', methods=['POST'])
+def findPath():
+    data = request.get_json()
+    print(data)
+    for i in data.values():
+        i[0] = int(i[0])
+        i[1] = int(i[1])
+        if (i[2] == 'N'):
+            i[2] = Facing.UP
+        if (i[2] == 'S'):
+            i[2] = Facing.DOWN
+        if (i[2] == 'E'):
+            i[2] = Facing.RIGHT
+        if (i[2] == 'W'):
+            i[2] = Facing.LEFT
+    print(data)
+    dictionary = returnPath(data)
+    cmd = dict()
+    cmd = dictionary
+    # print("returned path before 180 change", cmd)
+    # for i in cmd:
+    #     print("list is",cmd[i])
+    #     for j in range(len(cmd[i])):
+    #         if (cmd[i][j] == 'l180'):
+    #             del cmd[i][j]
+    #             # print("index is", j)
+    #             # print("list after deletion",cmd[i])
+    #             if (j == len(cmd[i]) - 1):
+    #                 cmd[i].append('l090')
+    #                 cmd[i].append('l090')
+    #             else:
+    #                 cmd[i].insert(j, 'l090')
+    #                 cmd[i].insert(j, 'l090')
+    #         elif (cmd[i][j] == 'r180'):
+    #             # print("enter r180")
+    #             # print(cmd[i], j, cmd[i][j])
+    #             del cmd[i][j]
+    #             # print("after deletion", cmd[i])
+    #             if (j == len(cmd[i]) - 1):
+    #                 # print("enter changing last value")
+    #                 cmd[i].append('r090')
+    #                 cmd[i].append('r090')
+    #             else:
+    #                 cmd[i].insert(j, 'r090')
+    #                 cmd[i].insert(j, 'r090')
+    #         elif (cmd[i][j] == 'm180'):
+    #             del cmd[i][j]
+    #             if (j == len(cmd[i]) - 1):
+    #                 cmd[i].append('m090')
+    #                 cmd[i].append('m090')
+    #             else:
+    #                 cmd[i].insert(j, 'm090')
+    #                 cmd[i].insert(j, 'm090')
+    #         elif (cmd[i][j] == 'o180'):
+    #             del cmd[i][j]
+    #             if (j == len(cmd[i]) - 1):
+    #                 cmd[i].append('o090')
+    #                 cmd[i].append('o090')
+    #             else:
+    #                 cmd[i].insert(j, 'o090')
+    #                 cmd[i].insert(j, 'o090')
+    # print("returned path after changing 180 to 90x2", cmd)
+    return cmd
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
+
+print("app closeeeeee")

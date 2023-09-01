@@ -1,0 +1,17 @@
+from typing import List, Union, Any
+
+from mdp_python_algo.robot_pathfinder.config.constants import ArenaConst
+from mdp_python_algo.robot_pathfinder.models.obstacle import Obstacle
+
+
+class Arena:
+    
+    def __init__(self):
+        self.arena: List[List[Union[Obstacle, Any]]] = \
+            [[None for _ in range(ArenaConst.NUM_COLS)] for _ in range(ArenaConst.NUM_ROWS)]
+        self.obstacles: List[Obstacle] = list()
+    
+    def add_obstacle(self, obstacle: Obstacle):
+        if self.arena[obstacle.cell_pos.cell_y][obstacle.cell_pos.cell_x] is None:
+            self.arena[obstacle.cell_pos.cell_y][obstacle.cell_pos.cell_x] = obstacle
+            self.obstacles.append(obstacle)

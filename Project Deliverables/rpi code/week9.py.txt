@@ -1,0 +1,102 @@
+import json
+import time
+from multiprocessing import Process
+import json
+import requests
+import time
+# import pandas
+from picamera import PiCamera
+
+# import picamera
+import requests
+import socket
+
+from communication.stm32 import STMLink
+
+class RaspberryPi:
+    def __init__(self):
+        self.stm_link = STMLink()
+
+        # define processes
+        self.proc_recv_bluetooth = None
+
+    def start(self):
+
+        print("entered start")
+
+
+        # establish bluetooth connection with Android
+        hostMACAddress = 'B8:27:EB:FE:BC:B6' # The MAC address of a Bluetooth adapter on the server. The server might have multiple Bluetooth adapters.
+        port = 1
+        backlog = 1
+        s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+        s.bind((hostMACAddress,port))
+        s.listen(backlog)
+        global client
+        client, address = s.accept()
+        print("Accepted connection from", client)
+
+        # establish connection with STM32
+        self.stm_link.connect()
+
+        # define processes
+        self.proc_recv_bluetooth = Process(target=self.recv_bluetooth)
+        #  
+
+        # start processes
+        self.proc_recv_bluetooth.start()
+
+    def recv_bluetooth(self) -> None:
+        while True:
+            data = client.recv(1024)
+            if data:
+                print("DATA RECIEVED:", data)
+                if(data.decode('utf-8') == "START"):
+                    count = 1
+                    while True:
+                        message :str = self.stm_link.recv()
+                        if message == 'K':
+                            print("start to take image")
+                            camera = PiCamera()
+                            time.sleep(2)
+                            image = camera.capture('./img.jpg')
+                            camera.close()
+                            image = './img.jpg'
+                            response = requests.post('http://192.168.1.16:5000/predictImage', files={'file': open(image, 'rb')})
+                            if response.status_code == 200:
+                                predictedList = []
+                                for i in json.loads(response.content):
+                                    if i["name"] != '10':
+                                        if len(predictedList) == 0:
+                                            predictedList = i
+                                        else:
+                                            if i["confidence"] > predictedList["confidence"]:
+                                                predictedList = i
+                                print("Image recognised is:", predictedList["name"])
+                            if predictedList["name"] == '38'and count == 1: #right arrow
+                                print("enter send stm 1000")
+                                self.stm_link.send('1000')
+                                count = 2
+                            if predictedList["name"] == '39' and count == 1: #left arrow
+                                self.stm_link.send('1001')
+                                count = 2
+                            if predictedList["name"] == '38' and count == 2: #right arrow
+                                self.stm_link.send('2000')
+                                count = 3
+                            if predictedList["name"] == '39' and count == 2: #left arrow
+                                self.stm_link.send('2001')
+                                count = 3
+                            if count == 3:
+                                print("done with path, stitching image now")            
+                                response2 = requests.get('http://192.168.1.16:5000/stitchImage')
+                                if response2.status_code == 200:
+                                # client.send("done with image rec".encode())
+                                    print("DONE WITH STITCHING")
+                
+
+
+if __name__ == "__main__":
+    rpi = RaspberryPi()
+    print("start") 
+    rpi.start()
+

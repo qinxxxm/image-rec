@@ -1,0 +1,7 @@
+The raspberry pi is in charge of the communication between the android tablet, the stm32, 
+and the laptop that hosts the image recognition and path finding API.
+
+We achieved this by using bluetooth sockets to connect to the tablet, pyserial to establish a serial link with the stm32, 
+and python flask to house APIs that we can call from the raspberry pi.
+
+We also used a multiprocessing library, to ensure that our raspberry pi can send and recieve messages from the different components concurrently.
